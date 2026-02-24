@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>СкрэтчЛаб — Учись программировать!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --blue: #4ECDC4;
+    --purple: #A855F7;
+    --green: #6BCB77;
+    --pink: #FF6B9D;
+    --dark: #1a1a2e;
+    --card-bg: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f4ff;
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, #fff 1px, transparent 1px),
+      radial-gradient(circle, #fff 1px, transparent 1px),
+      radial-gradient(circle, #ffffffaa 1px, transparent 1px);
+    background-size: 200px 200px, 300px 300px, 150px 150px;
+    background-position: 0 0, 100px 50px, 50px 120px;
+    opacity: 0.3;
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.2; }
+    to { opacity: 0.5; }
+  }
+
+  .floating-blocks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .block {
+    position: absolute;
+    border-radius: 12px;
+    font-size: 1.8rem;
+    opacity: 0.15;
+    animation: float linear infinite;
+  }
+
+  .block:nth-child(1)  { top: 10%; left: 5%;  animation-duration: 8s;  animation-delay: 0s; }
+  .block:nth-child(2)  { top: 20%; left: 80%; animation-duration: 10s; animation-delay: 1s; }
+  .block:nth-child(3)  { top: 60%; left: 10%; animation-duration: 7s;  animation-delay: 2s; }
+  .block:nth-child(4)  { top: 70%; left: 75%; animation-duration: 9s;  animation-delay: 0.5s; }
+  .block:nth-child(5)  { top: 40%; left: 50%; animation-duration: 11s; animation-delay: 3s; }
+  .block:nth-child(6)  { top: 85%; left: 40%; animation-duration: 6s;  animation-delay: 1.5s; }
+
+  @keyframes float {
+    0%   { transform: translateY(0) rotate(0deg); }
+    50%  { transform: translateY(-30px) rotate(10deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+
+  .hero-content { position: relative; z-index: 2; text-align: center; }
+
+  .logo-badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--dark);
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    padding: 6px 18px;
+    border-radius: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: pop 0.6s ease;
+  }
+
+  @keyframes pop {
+    0%   { transform: scale(0.5); opacity: 0; }
+    80%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .hero h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 span { color: var(--yellow); }
+
+  .hero p {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #a8b8d8;
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+
+  .btn-primary { background: var(--yellow); color: var(--dark); }
+  .btn-secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    text-align: center;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(-8px); }
+  }
+
+  /* ===== SECTIONS ===== */
+  section { padding: 80px 2rem; }
+
+  .section-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--dark);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .section-sub {
+    font-size: 1.05rem;
+    color: #6b7280;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* ===== WHAT IS SCRATCH ===== */
+  .what-section { background: #fff; }
+
+  .what-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .what-grid { grid-template-columns: 1fr; }
+  }
+
+  .scratch-visual {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 24px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: center;
+    box-shadow: 0 20px 50px rgba(102,126,234,0.4);
+  }
+
+  .scratch-block {
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 260px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: slideIn 0.5s ease both;
+  }
+
+  .scratch-block:nth-child(1) { background: #FFAB19; animation-delay: 0.1s; }
+  .scratch-block:nth-child(2) { background: #4C97FF; animation-delay: 0.2s; }
+  .scratch-block:nth-child(3) { background: #9966FF; animation-delay: 0.3s; }
+  .scratch-block:nth-child(4) { background: #5CB1D6; animation-delay: 0.4s; }
+  .scratch-block:nth-child(5) { background: #FF6680; animation-delay: 0.5s; margin-left: 1.5rem; }
+
+  @keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
+
+  .what-points { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1.5rem; }
+
+  .point {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: #f8faff;
+    border-radius: 14px;
+    border-left: 4px solid var(--blue);
+    transition: transform 0.2s;
+  }
+
+  .point:hover { transform: translateX(5px); }
+
+  .point-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .point h4 { font-weight: 800; font-size: 0.95rem; margin-bottom: 3px; }
+  .point p  { font-size: 0.85rem; color: #6b7280; line-height: 1.5; }
+
+  /* ===== MODULES ===== */
+  .modules-section { background: #f0f4ff; }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .module-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .module-card:nth-child(1)::before { background: var(--blue); }
+  .module-card:nth-child(2)::before { background: var(--orange); }
+  .module-card:nth-child(3)::before { background: var(--purple); }
+  .module-card:nth-child(4)::before { background: var(--green); }
+
+  .module-card:hover { transform: translateY(-6px); box-shadow: 0 12px 35px rgba(0,0,0,0.13); }
+
+  .module-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    opacity: 0.12;
+    position: absolute;
+    top: 1rem; right: 1.5rem;
+  }
+
+  .module-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+  .module-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .module-desc { font-size: 0.88rem; color: #6b7280; line-height: 1.6; margin-bottom: 1rem; }
+
+  .module-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag {
+    background: #f0f4ff;
+    color: #4b5563;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+
+  /* ===== TASKS ===== */
+  .tasks-section { background: #fff; }
+
+  .tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .task-card {
+    border-radius: 20px;
+    padding: 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s;
+  }
+
+  .task-card:hover { transform: translateY(-4px); }
+
+  .task-card.type-match  { background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
+  .task-card.type-fill   { background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+  .task-card.type-debug  { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+
+  .task-type {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .type-match  .task-type { background: #0ea5e9; color: #fff; }
+  .type-fill   .task-type { background: #22c55e; color: #fff; }
+  .type-debug  .task-type { background: #f59e0b; color: #fff; }
+
+  .task-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; margin-bottom: 0.8rem; }
+  .task-desc  { font-size: 0.9rem; color: #374151; line-height: 1.65; margin-bottom: 1.2rem; }
+
+  .task-code {
+    background: rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  .blank {
+    display: inline-block;
+    background: rgba(255,255,255,0.8);
+    border: 2px dashed rgba(0,0,0,0.2);
+    border-radius: 6px;
+    padding: 2px 14px;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .blank:hover { background: rgba(255,255,255,1); }
+  .blank.filled { border-style: solid; border-color: var(--green); color: #166534; font-weight: 800; }
+
+  /* ===== QUIZ ===== */
+  .quiz-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+  .quiz-section .section-title { color: #fff; }
+  .quiz-section .section-label { color: var(--yellow); }
+  .quiz-section .section-sub   { color: #a8b8d8; }
+
+  .quiz-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    max-width: 700px;
+  }
+
+  .quiz-progress-bar {
+    background: rgba(255,255,255,0.1);
+    border-radius: 50px;
+    height: 8px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: var(--yellow);
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+
+  .quiz-question {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .quiz-option {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1rem 1.4rem;
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .quiz-option:hover { background: rgba(255,255,255,0.15); border-color: var(--yellow); color: #fff; transform: translateX(4px); }
+  .quiz-option.correct { background: rgba(107,203,119,0.25); border-color: var(--green); color: #86efac; }
+  .quiz-option.wrong   { background: rgba(255,107,107,0.25); border-color: #ff6b6b; color: #fca5a5; }
+
+  .option-letter {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .quiz-feedback {
+    margin-top: 1.2rem;
+    padding: 1rem 1.4rem;
+    border-radius: 14px;
+    font-weight: 700;
+    display: none;
+  }
+
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: rgba(107,203,119,0.2); color: #86efac; }
+  .quiz-feedback.wrong   { background: rgba(255,107,107,0.2); color: #fca5a5; }
+
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .quiz-counter { color: #64748b; font-size: 0.9rem; }
+
+  .stars-display {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .star {
+    font-size: 1.5rem;
+    filter: grayscale(1);
+    transition: filter 0.3s, transform 0.3s;
+  }
+
+  .star.earned { filter: grayscale(0); transform: scale(1.2); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.875rem;
+  }
+
+  footer strong { color: var(--yellow); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(26,26,46,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .nav-logo {
+    font-family: 'Fredoka One', cursive;
+    color: var(--yellow);
+    font-size: 1.4rem;
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--yellow); }
+
+  @media (max-width: 600px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">🐱 СкрэтчЛаб</a>
+  <ul class="nav-links">
+    <li><a href="#about">О Scratch</a></li>
+    <li><a href="#modules">Модули</a></li>
+    <li><a href="#tasks">Задания</a></li>
+    <li><a href="#quiz">Тест</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="stars"></div>
+  <div class="floating-blocks">
+    <div class="block">🔵</div>
+    <div class="block">🟡</div>
+    <div class="block">🟣</div>
+    <div class="block">🟢</div>
+    <div class="block">🔴</div>
+    <div class="block">⭐</div>
+  </div>
+  <div class="hero-content">
+    <div class="logo-badge">🎓 3–4 класс · Цифровая грамотность</div>
+    <h1>Учись<br><span>программировать</span><br>играя!</h1>
+    <p>Интерактивный образовательный сайт по среде Scratch. Задания, мини-тесты и весёлые проекты для учеников начальной школы.</p>
+    <div class="hero-buttons">
+      <a href="#modules" class="btn btn-primary">🚀 Начать учиться</a>
+      <a href="#tasks" class="btn btn-secondary">📝 Попробовать задание</a>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ прокрути вниз</div>
+</section>
+
+<!-- WHAT IS SCRATCH -->
+<section class="what-section" id="about">
+  <div class="container">
+    <div class="what-grid">
+      <div>
+        <span class="section-label">Что такое Scratch?</span>
+        <h2 class="section-title">Программирование без страха ✨</h2>
+        <p class="section-sub">Scratch — это специальная среда, где код не пишется буквами, а собирается из цветных блоков, как конструктор LEGO!</p>
+        <div class="what-points">
+          <div class="point">
+            <div class="point-icon">🧩</div>
+            <div>
+              <h4>Блочный код</h4>
+              <p>Ты перетаскиваешь готовые блоки и соединяешь их — никаких сложных слов и синтаксиса</p>
+            </div>
+          </div>
+          <div class="point">
+            <div class="point-icon">🎮</div>
+            <div>
+              <h4>Создавай игры и мультфильмы</h4>
+              <p>Уже на первом уроке можно сделать анимированного персонажа, которым управляешь сам</p>
+            </div>
+          </div>
+          <div class="point">
+            <div class="point-icon">🧠</div>
+            <div>
+              <h4>Развивает логику</h4>
+              <p>Scratch учит разбивать задачи на маленькие шаги и думать алгоритмами</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scratch-visual">
+        <div class="scratch-block">🟡 Когда флажок нажат</div>
+        <div class="scratch-block">🔵 Идти 10 шагов</div>
+        <div class="scratch-block">🟣 Повторить 10 раз</div>
+        <div class="scratch-block">🔵 Повернуть на 15°</div>
+        <div class="scratch-block">🔴 Если касается края — отразить</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="modules-section" id="modules">
+  <div class="container">
+    <span class="section-label">Чему научишься</span>
+    <h2 class="section-title">4 модуля обучения 🗺️</h2>
+    <p class="section-sub">Каждый модуль — это новый уровень. Начинай с первого и постепенно становись настоящим программистом!</p>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-num">01</div>
+        <span class="module-icon">🎬</span>
+        <div class="module-title">Знакомство со сценой</div>
+        <p class="module-desc">Изучи координаты X и Y, научись менять фоны и внешний вид спрайтов. Создай свою первую сцену!</p>
+        <div class="module-tags">
+          <span class="tag">Координаты</span>
+          <span class="tag">Спрайты</span>
+          <span class="tag">Фоны</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">02</div>
+        <span class="module-icon">🏃</span>
+        <div class="module-title">Движение и анимация</div>
+        <p class="module-desc">Заставь персонажа двигаться, прыгать и вращаться. Познакомься с линейными алгоритмами.</p>
+        <div class="module-tags">
+          <span class="tag">Движение</span>
+          <span class="tag">Алгоритм</span>
+          <span class="tag">Анимация</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">03</div>
+        <span class="module-icon">🔄</span>
+        <div class="module-title">Умный герой: Циклы</div>
+        <p class="module-desc">Узнай про волшебный блок «Повторить». Зачем писать один блок 100 раз, если можно использовать цикл?</p>
+        <div class="module-tags">
+          <span class="tag">Цикл</span>
+          <span class="tag">Повторить</span>
+          <span class="tag">Всегда</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">04</div>
+        <span class="module-icon">🎯</span>
+        <div class="module-title">Игровая лаборатория</div>
+        <p class="module-desc">Создай настоящую игру с условиями, счётом и победой! Блок «Если... то» сделает твоего героя умным.</p>
+        <div class="module-tags">
+          <span class="tag">Условие</span>
+          <span class="tag">Если-то</span>
+          <span class="tag">Переменные</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASKS -->
+<section class="tasks-section" id="tasks">
+  <div class="container">
+    <span class="section-label">Практика</span>
+    <h2 class="section-title">Попробуй задания прямо здесь 💪</h2>
+    <p class="section-sub">Три вида заданий: соединить, дополнить и найти ошибку. Нажимай и проверяй себя!</p>
+    <div class="tasks-grid">
+
+      <!-- Task 1: Match -->
+      <div class="task-card type-match">
+        <span class="task-type">Соединить</span>
+        <div class="task-title">Блок и его функция</div>
+        <p class="task-desc">Соедини блок Scratch с его описанием стрелкой (или выбери правильный ответ для блока <strong>«Повторить»</strong>):</p>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+          <div id="match-options" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+          <div id="match-feedback" style="padding:0.8rem;border-radius:10px;font-weight:700;font-size:0.9rem;display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Task 2: Fill -->
+      <div class="task-card type-fill">
+        <span class="task-type">Допиши код</span>
+        <div class="task-title">Кот идёт по кругу</div>
+        <p class="task-desc">Вставь пропущенное число, чтобы кот сделал полный оборот (360°), повернув на одинаковое число раз:</p>
+        <div class="task-code">
+          🟡 Когда флажок нажат<br>
+          🟣 Повторить <span class="blank" id="blank1" onclick="fillBlank(this, '12')">__</span> раз<br>
+          &nbsp;&nbsp;🔵 Повернуть на <span class="blank" id="blank2" onclick="fillBlank(this, '30')">__</span>°<br>
+          &nbsp;&nbsp;🔵 Идти 50 шагов
+        </div>
+        <div id="fill-result" style="margin-top:0.8rem;font-weight:700;font-size:0.9rem;display:none;"></div>
+      </div>
+
+      <!-- Task 3: Debug -->
+      <div class="task-card type-debug">
+        <span class="task-type">Найди ошибку</span>
+        <div class="task-title">Что-то пошло не так 🐛</div>
+        <p class="task-desc">Кот должен говорить «Привет!» при нажатии на него. Найди лишний или неверный блок:</p>
+        <div class="task-code" id="debug-code">
+          <div class="debug-block" onclick="selectBlock(this, false)" style="cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s;">🟡 Когда этот спрайт нажат ✓</div>
+          <div class="debug-block" onclick="selectBlock(this, false)" style="cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s;">🔵 Идти 100 шагов ← ?</div>
+          <div class="debug-block" onclick="selectBlock(this, true)" style="cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s;">💬 Говорить «Привет!»</div>
+          <div class="debug-block" onclick="selectBlock(this, false)" style="cursor:pointer;padding:4px 8px;border-radius:8px;transition:background 0.2s;">⏱ Ждать 2 секунды</div>
+        </div>
+        <div id="debug-hint" style="margin-top:0.8rem;font-size:0.82rem;color:#92400e;">💡 Нажми на блок, который ЛИШНИЙ в этой программе</div>
+        <div id="debug-result" style="margin-top:0.5rem;font-weight:700;display:none;"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <span class="section-label">Проверь себя</span>
+    <h2 class="section-title">Мини-тест по Scratch ⭐</h2>
+    <p class="section-sub">5 вопросов. За каждый правильный ответ — звезда опыта! Сколько заработаешь?</p>
+    <div class="stars-display" id="stars-display">
+      <div class="star" id="s1">⭐</div>
+      <div class="star" id="s2">⭐</div>
+      <div class="star" id="s3">⭐</div>
+      <div class="star" id="s4">⭐</div>
+      <div class="star" id="s5">⭐</div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quiz-progress" style="width:0%"></div>
+      </div>
+      <div class="quiz-question" id="quiz-question">Нажми «Начать тест» чтобы начать!</div>
+      <div class="quiz-options" id="quiz-options">
+        <button class="btn btn-primary" onclick="startQuiz()" style="align-self:flex-start">▶ Начать тест</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="quiz-nav">
+        <div class="quiz-counter" id="quiz-counter"></div>
+        <div id="quiz-score" style="color:#64748b;font-weight:700;font-size:0.9rem;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>🐱 <strong>СкрэтчЛаб</strong> — образовательный сайт по программированию в среде Scratch</p>
+  <p style="margin-top:0.5rem;">Разработан для учеников 3–4 классов · КГУ «ОШ №11» г. Костанай · 2026</p>
+</footer>
+
+<script>
+// ===== MATCH TASK =====
+const matchAnswers = [
+  { text: 'Блок «Повторить» нужен для того, чтобы...', options: ['Остановить программу', 'Выполнить действие несколько раз', 'Сказать фразу', 'Изменить цвет'], correct: 1 }
+];
+
+function initMatch() {
+  const container = document.getElementById('match-options');
+  const q = matchAnswers[0];
+  container.innerHTML = `<div style="font-weight:700;margin-bottom:0.5rem;font-size:0.9rem">${q.text}</div>`;
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.style.cssText = 'width:100%;padding:8px 14px;border-radius:10px;border:2px solid rgba(0,0,0,0.1);background:#fff;cursor:pointer;font-family:Nunito,sans-serif;font-weight:600;font-size:0.85rem;text-align:left;transition:all 0.2s;';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      document.querySelectorAll('#match-options button').forEach(b => b.style.background = '#fff');
+      const fb = document.getElementById('match-feedback');
+      fb.style.display = 'block';
+      if (i === q.correct) {
+        btn.style.background = '#dcfce7';
+        btn.style.borderColor = '#22c55e';
+        fb.style.background = '#dcfce7';
+        fb.style.color = '#166534';
+        fb.textContent = '✅ Правильно! Блок «Повторить» выполняет действия заданное количество раз.';
+      } else {
+        btn.style.background = '#fee2e2';
+        btn.style.borderColor = '#ef4444';
+        fb.style.background = '#fee2e2';
+        fb.style.color = '#991b1b';
+        fb.textContent = '❌ Не совсем. Подумай ещё раз!';
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ===== FILL TASK =====
+let fill1Done = false, fill2Done = false;
+
+function fillBlank(el, val) {
+  if (el.classList.contains('filled')) return;
+  el.textContent = val;
+  el.classList.add('filled');
+  if (el.id === 'blank1') fill1Done = true;
+  if (el.id === 'blank2') fill2Done = true;
+  if (fill1Done && fill2Done) {
+    const res = document.getElementById('fill-result');
+    res.style.display = 'block';
+    res.style.color = '#166534';
+    res.textContent = '✅ Отлично! 12 × 30° = 360° — кот сделает полный круг!';
+  }
+}
+
+// ===== DEBUG TASK =====
+function selectBlock(el, isCorrect) {
+  document.querySelectorAll('.debug-block').forEach(b => b.style.background = '');
+  const result = document.getElementById('debug-result');
+  result.style.display = 'block';
+  if (isCorrect) {
+    // The "correct" button here is the good block, but task asks for wrong block
+    el.style.background = 'rgba(239,68,68,0.15)';
+    result.style.color = '#92400e';
+    result.textContent = '🤔 Этот блок нужен! Найди тот, который лишний для этой задачи.';
+  } else if (el.textContent.includes('Идти 100 шагов')) {
+    el.style.background = 'rgba(34,197,94,0.15)';
+    result.style.color = '#166534';
+    result.textContent = '✅ Правильно! Блок «Идти 100 шагов» лишний — кот должен только говорить, а не двигаться.';
+    document.getElementById('debug-hint').style.display = 'none';
+  } else {
+    el.style.background = 'rgba(239,68,68,0.15)';
+    result.style.color = '#92400e';
+    result.textContent = '❌ Не тот блок. Подумай: что лишнее для задачи «сказать привет»?';
+  }
+}
+
+// ===== QUIZ =====
+const questions = [
+  {
+    q: 'Какой блок Scratch заставляет действие повторяться снова и снова?',
+    opts: ['Если...то', 'Повторить всегда', 'Идти 10 шагов', 'Говорить «привет»'],
+    a: 1, explain: '«Повторить всегда» — это бесконечный цикл. Он выполняется непрерывно!'
+  },
+  {
+    q: 'Каким цветом обозначены блоки «Движение» в Scratch?',
+    opts: ['Жёлтым', 'Оранжевым', 'Синим', 'Зелёным'],
+    a: 2, explain: 'Блоки движения синего цвета. Это помогает быстро их найти!'
+  },
+  {
+    q: 'Что означает «баг» в программировании?',
+    opts: ['Новая функция', 'Ошибка в программе', 'Название языка', 'Цикл'],
+    a: 1, explain: 'Баг (bug) — это ошибка. Процесс поиска ошибок называется «отладка» (debugging).'
+  },
+  {
+    q: 'Какие координаты находятся в центре сцены Scratch?',
+    opts: ['X=100, Y=100', 'X=0, Y=0', 'X=240, Y=180', 'X=-100, Y=50'],
+    a: 1, explain: 'Центр сцены всегда X=0, Y=0. Как на математической координатной плоскости!'
+  },
+  {
+    q: 'Что произойдёт при нажатии зелёного флажка в Scratch?',
+    opts: ['Программа остановится', 'Программа запустится', 'Удалится спрайт', 'Изменится фон'],
+    a: 1, explain: 'Зелёный флажок — кнопка запуска! Все скрипты с блоком «Когда флажок нажат» начинают работать.'
+  }
+];
+
+let current = 0, score = 0, answered = false;
+
+function startQuiz() {
+  current = 0; score = 0; answered = false;
+  document.getElementById('stars-display').querySelectorAll('.star').forEach(s => s.classList.remove('earned'));
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[current];
+  document.getElementById('quiz-progress').style.width = (current / questions.length * 100) + '%';
+  document.getElementById('quiz-question').textContent = `${current + 1}. ${q.q}`;
+  document.getElementById('quiz-counter').textContent = `Вопрос ${current + 1} из ${questions.length}`;
+  document.getElementById('quiz-score').textContent = `Счёт: ${score}/${questions.length}`;
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-feedback').textContent = '';
+  answered = false;
+
+  const letters = ['А', 'Б', 'В', 'Г'];
+  const container = document.getElementById('quiz-options');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-option';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => answer(btn, i, q);
+    container.appendChild(btn);
+  });
+}
+
+function answer(btn, idx, q) {
+  if (answered) return;
+  answered = true;
+  const fb = document.getElementById('quiz-feedback');
+  const options = document.querySelectorAll('.quiz-option');
+
+  options[q.a].classList.add('correct');
+
+  if (idx === q.a) {
+    score++;
+    btn.classList.add('correct');
+    fb.className = 'quiz-feedback correct show';
+    fb.textContent = '✅ Правильно! ' + q.explain;
+    const star = document.getElementById('s' + (current + 1));
+    if (star) setTimeout(() => star.classList.add('earned'), 300);
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'quiz-feedback wrong show';
+    fb.textContent = '❌ Не совсем. ' + q.explain;
+  }
+
+  document.getElementById('quiz-score').textContent = `Счёт: ${score}/${questions.length}`;
+
+  setTimeout(() => {
+    current++;
+    if (current < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }, 2000);
+}
+
+function showResult() {
+  document.getElementById('quiz-progress').style.width = '100%';
+  const msgs = ['Попробуй ещё раз! 💪', 'Неплохо, продолжай! 📚', 'Хорошо, но можно лучше! 🎯', 'Отлично! Ты молодец! 🌟', 'Ты настоящий профи! 🏆'];
+  const msg = score <= 1 ? msgs[0] : score === 2 ? msgs[1] : score === 3 ? msgs[2] : score === 4 ? msgs[3] : msgs[4];
+  document.getElementById('quiz-question').textContent = `Тест завершён! Результат: ${score}/5 — ${msg}`;
+  document.getElementById('quiz-options').innerHTML = `<button class="btn btn-primary" onclick="startQuiz()">🔄 Пройти снова</button>`;
+  document.getElementById('quiz-counter').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+}
+
+// Init
+initMatch();
+</script>
+</body>
+</html>
